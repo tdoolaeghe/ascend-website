@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panier - Ascend</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">ASCEND</div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="shop.html">Boutique</a></li>
+                <li><a href="about.html">À propos</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="cart.html" class="active">🛒</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="cart">
+        <h1>Votre Panier</h1>
+        <div id="cart-items"></div>
+        <p id="cart-total"></p>
+        <button class="btn" id="checkout">Passer à la caisse</button>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Ascend. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        function displayCart() {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            let cartItems = document.getElementById("cart-items");
+            let cartTotal = document.getElementById("cart-total");
+
+            cartItems.innerHTML = "";
+            let total = 0;
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = "<p>Votre panier est vide.</p>";
+            } else {
+                cart.forEach(item => {
+                    let itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+                    cartItems.innerHTML += `
+                        <div class="cart-item">
+                            <img src="${item.img}" width="50">
+                            <span>${item.name} x${item.quantity}</span>
+                            <span>${itemTotal}€</span>
+                            <button onclick="removeFromCart(${item.id})">❌</button>
+                        </div>
+                    `;
+                });
+            }
+
+            cartTotal.textContent = "Total : " + total + "€";
+        }
+
+        function removeFromCart(id) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            cart = cart.filter(item => item.id !== id);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            displayCart();
+        }
+
+        document.getElementById("checkout").addEventListener("click", function() {
+            alert("Redirection vers la page de paiement...");
+            window.location.href = "checkout.html";
+        });
+
+        displayCart();
+    </script>
+
+</body>
+</html>
